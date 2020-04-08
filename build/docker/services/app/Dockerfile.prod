@@ -1,0 +1,38 @@
+FROM python:3.7 as builder
+
+WORKDIR /usr/src/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+RUN pip install --upgrade pip
+RUN pip install flake8
+COPY . /usr/src/app
+
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+
+FROM python:3.7
+
+RUN addgroup --system app && adduser --system --group app
+
+
+ENV HOME=/usr/src/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
+RUN apt-get update && apt-get install -y --no-install-recommends netcat
+COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /usr/src/app/requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
+
+COPY ./ $HOME
+
+RUN chown -R app:app $HOME
+USER app
+ENTRYPOINT ["/usr/src/app/build/docker/services/app/scripts/entrypoint.prod.sh"]

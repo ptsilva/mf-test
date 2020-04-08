@@ -1,0 +1,77 @@
+schema {
+  query: Query
+}
+
+scalar DateTime
+
+scalar Email
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  user(id: ID): User
+  userByEmail(email: String): User
+  users(limit: Int, skip: Int, sortField: String, sortOrder: String): [User]
+  website(id: ID): Website
+  websiteByUrl(url: String): Website
+  websites(limit: Int, skip: Int, sortField: String, sortOrder: String): [Website]
+  statsTotal(initialTimestamp: DateTime, finalTimestamp: DateTime): Stats
+  statsByWebsite(initialTimestamp: DateTime, finalTimestamp: DateTime, minAge: Int, maxAge: Int, gender: String, users: [Email], websites: [Url]): [Stats]
+  statsByUser(initialTimestamp: DateTime, finalTimestamp: DateTime, minAge: Int, maxAge: Int, gender: String, users: [Email], websites: [Url]): [Stats]
+}
+
+type Stats implements Node {
+  id: ID!
+  usersCount: Int
+  websitesCount: Int
+  visitsCount: Int
+  users: [User]
+  websites: [Website]
+  visits: [Visit]
+}
+
+scalar Url
+
+type User implements Node {
+  id: ID!
+  email: String!
+  name: String
+  gender: String
+  dateOfBirth: String
+  visits(before: String, after: String, first: Int, last: Int): VisitConnection
+}
+
+type Visit implements Node {
+  id: ID!
+  userId: Int!
+  websiteId: Int!
+  timestamp: DateTime!
+  user: User
+  website: Website
+}
+
+type VisitConnection {
+  pageInfo: PageInfo!
+  edges: [VisitEdge]!
+}
+
+type VisitEdge {
+  node: Visit
+  cursor: String!
+}
+
+type Website implements Node {
+  id: ID!
+  url: String!
+  topic: String
+  visits(before: String, after: String, first: Int, last: Int): VisitConnection
+}

@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  web:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: build/docker/services/app/Dockerfile
+    command: python wsgi.py
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 5000:5000
+    environment:
+      - SECRET_KEY=3d6f45a5fc12445dbac2f59c3b6c7cb1
+      - FLASK_ENV=development
+      - TESTING=1
+      - FLASK_DEBUG=1
+      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:developmentpass@db:5432/application
+      - TESTING_SQLALCHEMY_DATABASE_URI=postgresql://postgres:developmentpass@db:5432/testing
+    depends_on:
+      - db
+  db:
+    image: postgres:12-alpine
+    restart: on-failure
+    volumes:
+      - postgres_dev:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=developmentpass
+      - POSTGRES_DB=application
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 5050:5050
+    environment:
+      - PGADMIN_LISTEN_PORT=5050
+      - PGADMIN_DEFAULT_EMAIL=dev@dev.com
+      - PGADMIN_DEFAULT_PASSWORD=developmentpass
+
+volumes:
+  postgres_dev:

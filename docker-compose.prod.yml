@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  web:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: build/docker/services/app/Dockerfile.prod
+    command: gunicorn --bind 0.0.0.0:5000 manage:app
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 5000:5000
+    environment:
+      - SECRET_KEY=3d6f45a5fc12445dbac2f59c3b6c7cb1
+      - FLASK_ENV=production
+      - TESTING=0
+      - FLASK_DEBUG=0
+      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:prod@db:5432/application
+    depends_on:
+      - db
+  db:
+    restart: on-failure
+    image: postgres:12-alpine
+    volumes:
+      - postgres_prod:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=prod
+      - POSTGRES_DB=application
+  nginx:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: ./build/docker/services/nginx/Dockerfile
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_prod:
