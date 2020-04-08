@@ -19,10 +19,10 @@ type PageInfo {
 
 type Query {
   user(id: ID): User
-  userByEmail(email: String): User
+  userByEmail(email: Email): User
   users(limit: Int, skip: Int, sortField: String, sortOrder: String): [User]
   website(id: ID): Website
-  websiteByUrl(url: String): Website
+  websiteByUrl(url: Url): Website
   websites(limit: Int, skip: Int, sortField: String, sortOrder: String): [Website]
   statsTotal(initialTimestamp: DateTime, finalTimestamp: DateTime): Stats
   statsByWebsite(initialTimestamp: DateTime, finalTimestamp: DateTime, minAge: Int, maxAge: Int, gender: String, users: [Email], websites: [Url]): [Stats]

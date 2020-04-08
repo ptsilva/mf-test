@@ -55,5 +55,6 @@ def query(query):
     string = json.dumps(Client(schema=schema).execute(query), sort_keys=False, indent=2)
     print(string)
 
+
 if __name__ == "__main__":
     cli()
