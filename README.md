@@ -9,11 +9,11 @@
 ```$ docker-compose up```
 
 ## Starting production server
-```$ docker-compose -d -f docker-compose.prod.yml up```
+```$ docker-compose -f docker-compose.prod.yml up -d```
 
 ## Seeding database
 #### production environment:
-```$ docker-compose -f docker-compose.prod.yml run web python manage.py db_seed```
+```$ docker-compose -f docker-compose.prod.yml run web python manage.py db_seed -d```
 #### development environment
 ```$ docker-compose run web python manage.py db_seed```
 
@@ -23,6 +23,11 @@
 
 #### Development environment
 <a href="http://localhost:1337/graphql">http://localhost:5000/graphql
+
+- PGadmin
+  - Address: <a href="http://localhost:5050">http://localhost:5050
+  - User: ```dev@dev.com```
+  - Password: ```developmentpass```
 
 ## Client Command line
 ```docker-compose run web python manage.py query "{ users (limit: 2) {id, name}}"```
