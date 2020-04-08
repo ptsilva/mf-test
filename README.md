@@ -43,5 +43,7 @@
 }
 ``` 
 
+## Generating schema file (schema.graphql)
+```$ docker-compose run web python manage.py generate_schema```
 ## Running automated tests
 ```$ docker-compose run web python -m unittest```
