@@ -2,7 +2,8 @@ from tests.base import BaseTest
 from tests.base import WebsiteFactory, UserFactory
 from application.models import VisitModel, UserModel, WebsiteModel
 
-class TestNewVisit (BaseTest):
+
+class TestNewVisit(BaseTest):
     def test_new_visit (self):
         user = UserFactory()
         website = WebsiteFactory()
@@ -27,7 +28,7 @@ class TestNewVisit (BaseTest):
         self.assertEqual(self.session.query(UserModel.id).count(), 1)
         self.assertEqual(self.session.query(WebsiteModel.id).count(), 1)
 
-    def test_upsert_visit (self):
+    def test_upsert_visit(self):
         user = UserFactory()
         website = WebsiteFactory()
 
