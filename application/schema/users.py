@@ -7,3 +7,5 @@ class User(graphene_sqlalchemy.SQLAlchemyObjectType):
     class Meta:
         model = UserModel
         interfaces = (graphene.Node,)
+
+

@@ -1,5 +1,6 @@
 from application.models import VisitModel, WebsiteModel, UserModel
-from application.utils import apply_filters
+from application.schema.visits import Visit
+from application.utils import apply_filters, get_or_create, model2dict
 from collections import defaultdict
 from datetime import datetime
 from typing import List, Dict
@@ -160,3 +161,14 @@ def get_count_visits_by_users(filters) -> Dict:
         result[visit.get('user_id')] = visit.get('count')
 
     return result
+
+
+def new_visit(info, email=None, url=None):
+    user = get_or_create(db.session, UserModel, email=email)
+    website = get_or_create(db.session, WebsiteModel, url=url)
+
+    instance = VisitModel(user_id=user.id, website_id=website.id)
+    db.session.add(instance)
+    db.session.commit()
+
+    return Visit.get_query(info).get(instance.id)

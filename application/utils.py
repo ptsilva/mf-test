@@ -33,14 +33,15 @@ def apply_filters(query, filters: dict):
 
 def get_or_create(session, model, **kwargs):
     """Perform fetch or create model on database"""
-    instance = session.query(model).filter_by(**kwargs).first()
+    instance = model.query.filter_by(**kwargs).first()
+
     if instance:
         return instance
-    else:
-        instance = model(**kwargs)
-        session.add(instance)
-        session.commit()
-        return instance
+
+    instance = model(**kwargs)
+    session.add(instance)
+    session.commit()
+    return instance
 
 
 def model2dict(model):

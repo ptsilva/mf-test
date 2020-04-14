@@ -1,8 +1,7 @@
 from application.schema.websites import Website
 from application.models import WebsiteModel, VisitModel, UserModel
-from application.utils import apply_filters
+from application.utils import apply_filters, model2dict, get_or_create
 from application import db
-# from application.utils import model2dict
 from sqlalchemy import asc, desc, func
 import graphene
 from datetime import datetime
@@ -97,3 +96,9 @@ def get_websites_by_users(filters: dict) -> Dict:
         result[user_id].append(website)
 
     return result
+
+
+def upsert_website(params: Dict):
+    instance = get_or_create(db.session, WebsiteModel, **params)
+
+    return instance

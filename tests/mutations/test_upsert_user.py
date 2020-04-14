@@ -2,14 +2,6 @@ from tests.base import BaseTest
 from tests.base import UserFactory
 
 
-def model_to_dict(model):
-    d = {}
-    for column in model.__table__.columns:
-        d[column.name] = getattr(model, column.name)
-
-    return d
-
-
 class TestUpsertUser (BaseTest):
     def test_insert_user(self):
         user = UserFactory()
@@ -22,7 +14,7 @@ class TestUpsertUser (BaseTest):
         }
 
         result = self.client.execute("""
-            mutation Mutation($name: String, $email: String!, $gender: String!) {
+            mutation Mutation($name: String!, $email: Email!, $gender: String!) {
               upsertUser(name: $name, email: $email, gender: $gender) {
                 user {
                   id, name, email
@@ -48,7 +40,7 @@ class TestUpsertUser (BaseTest):
         }
         new_name = 'New Name'
         result = self.client.execute("""
-            mutation Mutation($name: String, $email: String!, $gender: String!) {
+            mutation Mutation($name: String, $email: Email!, $gender: String!) {
               upsertUser(name: $name, email: $email, gender: $gender) {
                 user {
                   id, name, email

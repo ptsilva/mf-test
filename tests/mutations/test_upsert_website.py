@@ -7,7 +7,7 @@ class TestUpsertWebsite (BaseTest):
         url = 'http://google.com'
         topic = 'search'
         result = self.client.execute("""
-            mutation Mutation($url: String!, $topic: String) {
+            mutation Mutation($url: Url!, $topic: Topic) {
               upsertWebsite(url: $url, topic: $topic) {
                 website {
                   id, url, topic
@@ -27,7 +27,7 @@ class TestUpsertWebsite (BaseTest):
 
         new_topic = 'New Topic'
         result = self.client.execute("""
-            mutation Mutation($url: String!, $topic: String) {
+            mutation Mutation($url: Url!, $topic: Topic) {
               upsertWebsite(url: $url, topic: $topic) {
                 website {
                   id, url, topic

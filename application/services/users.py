@@ -5,7 +5,7 @@ from application import db
 from sqlalchemy import asc, desc, func, distinct
 from typing import List, Dict
 from datetime import datetime
-from application.utils import apply_filters
+from application.utils import apply_filters, get_or_create, model2dict
 import graphene
 from collections import defaultdict
 
@@ -105,3 +105,9 @@ def get_users_by_websites(filters: dict) -> Dict:
         result[website_id].append(user)
 
     return result
+
+
+def upsert_user(params: Dict):
+    instance = get_or_create(db.session, UserModel, **params)
+
+    return instance

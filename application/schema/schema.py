@@ -3,6 +3,7 @@ from application.resolvers import users as users_resolver
 from application.resolvers import websites as websites_resolver
 from application.resolvers import stats as stats_resolver
 from application.schema import scalars
+from application.schema import mutations
 import graphene
 
 
@@ -60,4 +61,9 @@ class Query(graphene.ObjectType):
     )
 
 
-schema = graphene.Schema(query=Query)
+class Mutation(graphene.ObjectType):
+    upsert_user = mutations.UpsertUser.Field()
+    upsert_website = mutations.UpsertWebsite.Field()
+    new_visit = mutations.NewVisit.Field()
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
